@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container p-5">
+    <div class="card">
+        <div class="card-header">
+            <h5>Subir proyecto</h5>
+        </div>
+        <div class="card-body p-5">
+            <form method=post enctype=multipart/form-data>
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="custom-file">
+                            <input type="file" name=file class="custom-file-input" id="customFileLang" lang="es">
+                            <label class="custom-file-label" for="customFileLang">Seleccione su archivo...</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <button class="btn btn-info btn-block" type="submit"><b>Subir | Corregir</b></button>
+                    </div>
+                </div>
+            </form>
+            <p></p>
+            {% if info.messages != "" %}
+            <div class="alert alert-info text-center" role="alert"><b>{{info.messages}}</b></div>
+            {% endif %}
+        </div>
+    </div>
+    <p></p>
+    <div class="card">
+        <div class="card-header">
+            {% if info.avg != "" %}
+                <h4>Corrección: <span class="badge badge-warning">{{ info.avg }}<span></h4>
+            {% else %}
+                <h5>Corrección:</h5>
+            {% endif %}
+        </div>
+        <div class="card-body p-5 text-center">
+            <div class="row">
+                <div class="col-sm-12">
+                    {% if info.results != [] %}
+                        {% for line in info.results %}
+                            <b>{{line}}</b><br>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Code to see the name of the file appear on select file browser-->
+<script>
+    $(".custom-file-input").on("change", function() {
+      var fileName = $(this).val().split("\\").pop();
+      $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+});
+</script>
+{% endblock %}
