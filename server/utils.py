@@ -40,8 +40,6 @@ def createNewTestbench(input_proy_file_name, output_test_file_name):
         return 0
 
 
-    # TODO: Chequear que el arcivo del proyecto compile (no tenga errores de por si)
-
     # Wirte head and imports
     testbench_file.write("{-# LANGUAGE ScopedTypeVariables, TemplateHaskell #-}\n")
     testbench_file.write("module Main where\n")

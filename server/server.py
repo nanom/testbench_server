@@ -6,7 +6,6 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 from dotenv import load_dotenv
 
-
 # --- Own ---
 import paths as _path
 import utils as _util
@@ -14,6 +13,12 @@ import utils as _util
 
 # --- Declare constants ---
 ALLOWED_EXTENSIONS = {'hs'}
+
+
+# --- Load enviroment vars ---
+load_dotenv()
+SERVER_PORT = os.getenv('SERVER_PORT')
+SERVER_HOST = os.getenv('SERVER_HOST')
 
 
 # --- File prefix ---
@@ -27,12 +32,6 @@ app.config['UPLOAD_FOLDER'] = _path.UPLOAD_FOLDER
 app.config['TESTS_FOLDER'] = _path.TEST_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024 # Max file size allowed = 50 Mb
 app.secret_key = os.urandom(24)
-
-
-# --- Load enviroment vars ---
-load_dotenv()
-SERVER_PORT = os.getenv('SERVER_PORT')
-SERVER_HOST = os.getenv('SERVER_HOST')
 
 
 # --- Main method ---
@@ -70,6 +69,10 @@ def index():
 
         # Upload file
         uploadFile(file, filename)
+
+        # TODO: Chequear que el archivo del proyecto posea nombres de funciones correctas
+
+        # TODO: Chequear que el archivo del proyecto compile (no tenga errores de por si)
 
         # Run test and output results
         is_ok, test_outputs, test_avg = runTest(filename)
@@ -160,4 +163,4 @@ def cleanAll(filename):
 
 
 if __name__ == '__main__':
-    app.run(port=SERVER_PORT, host=SERVER_HOST, debug=True, threaded=True)
+    app.run(port=int(SERVER_PORT), host=SERVER_HOST, debug=True, threaded=True)

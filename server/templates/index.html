@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="container p-5">
+<div class="container p-4">
     <div class="card">
         <div class="card-header">
             <h5>Subir proyecto</h5>
         </div>
-        <div class="card-body p-5">
+        <div class="card-body p-3">
             <form method=post enctype=multipart/form-data>
                 <div class="row">
                     <div class="col-sm-8">
@@ -15,7 +15,8 @@
                             <label class="custom-file-label" for="customFileLang">Seleccione su archivo...</label>
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-1 p-1"></div>
+                    <div class="col-sm-3">
                         <button class="btn btn-info btn-block" type="submit"><b>Subir | Corregir</b></button>
                     </div>
                 </div>
@@ -27,15 +28,12 @@
         </div>
     </div>
     <p></p>
+    {% if data.test_results[1] != "" %}
     <div class="card">
         <div class="card-header">
-            {% if data.test_results[1] != "" %}
                 <h4>Corrección: <span class="badge badge-warning">{{ data.test_results[1] }}<span></h4>
-            {% else %}
-                <h5>Corrección:</h5>
-            {% endif %}
         </div>
-        <div class="card-body p-5 text-center">
+        <div class="card-body p-3 text-center">
             <div class="row">
                 <div class="col-sm-12">
                     {% if data.test_results[0] != [] %}
@@ -47,6 +45,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 </div>
 
 <!-- Code to see the name of the file appear on select file browser-->
