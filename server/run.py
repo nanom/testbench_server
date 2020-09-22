@@ -14,14 +14,11 @@ import utils as _util
 
 # --- Declare constants ---
 ALLOWED_EXTENSIONS = {'hs'}
-CREATE_TESTBENCH_SCRIPT = 'create_testbench.py'
-EXECUTE_TESTBENCH_SCRIPT = 'runhaskell'
 
 
 # --- File prefix ---
 PREF_TEST = 'test_'
 PREF_RESULTS = 'result_'
-
 
 
 # --- Set app configurations ---
@@ -63,7 +60,8 @@ def index():
         if not allowedFile(file.filename):
             return renderIndex("Archivo no permitido. Solo extensiones '.hs'")
 
-        # Secure name verification
+        # Check and return a secure version of filename path
+        # '../../../etc/passwd' -> 'etc_passwd'
         filename = secure_filename(file.filename)
 
         # Rename to have a unique and unmistakable filename
@@ -73,10 +71,10 @@ def index():
         # Upload file
         uploadFile(file, filename)
 
-        # check if compile ToDo
-
         # Run test and output results
-        test_outputs, test_avg = runTest(filename)
+        is_ok, test_outputs, test_avg = runTest(filename)
+        if not is_ok:
+            return renderIndex("Error al correr el test. Intente nuevamente.")
 
         # Delete file upload, test and results
         cleanAll(filename)
@@ -84,7 +82,6 @@ def index():
         return renderIndex( "Archivo cargado y corregido exitosamente",
                             test_outputs,
                             test_avg)
-
 
 
 # --- Auxiliar methods ---
@@ -109,34 +106,44 @@ def runTest(filename):
     result_name_file = os.path.relpath(os.path.join(_path.TEST_FOLDER, PREF_RESULTS+filename))
 
     # Create an new testbench_name_file with incluided functions of proy file
-    _util.createNewTestbench(proy_name_file, testbench_name_file)
+    is_ok = _util.createNewTestbench(proy_name_file, testbench_name_file)
+    if not is_ok:
+        return 0, None, None
 
     # Execute new_test, and save results in result_name_file
-    os.system("{} {} -> {} ".format(EXECUTE_TESTBENCH_SCRIPT,testbench_name_file,result_name_file))
+    os.system("runhaskell {} -> {} ".format(testbench_name_file,result_name_file))
 
-    return getTestResults(result_name_file)
+    is_ok, test_outputs, test_avg = getTestResults(result_name_file)
+    if not is_ok:
+        return 0, None, None
+
+    return 1, test_outputs, test_avg
 
 def getTestResults(result_name_file):
     # Read result_name_file with obteined tests results
-    results_file = open(result_name_file,'r')
-    output_results = []
-    props_count = 0
-    ok_cout = 0
+    test_outputs, test_avg = [], 0
+    total_props, ok_prop = 0, 0
+
+    is_ok, results_file = _util.readFile(result_name_file)
+    if not is_ok:
+        0, None, None
 
     for line in results_file:
         if line.find("prop_") != (-1):
-            props_count += 1
+            total_props += 1
 
         if line.find("+++ OK") != (-1):
-            ok_cout += 1
+            ok_prop += 1
 
         line = line.rstrip().split("from")[0]
-        output_results.append(line)
+        test_outputs.append(line)
 
     results_file.close()
 
-    average = "0" if props_count == 0 else round(ok_cout / props_count * 100.0, 1)
-    return output_results, str(average)+'%'
+    if total_props != 0:
+        test_avg = round(ok_prop / total_props * 100.0, 1)
+
+    return 1, test_outputs, str(test_avg)+'%'
 
 def cleanAll(filename):
     # Remove proy file upload

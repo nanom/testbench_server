@@ -21,37 +21,34 @@ def createNewTestbench(input_proy_file_name, output_test_file_name):
         0: Have been an error in the process
     """
 
-    # Open files  and create new files
-    try:
-        proy_file = open(input_proy_file_name, 'r')
-    except IOError:
-        print("ERROR!: Impossible to open proy_file.")
+    # Open files and create new files
+    is_ok, proy_file = readFile(input_proy_file_name, "Impossible to open proy_file")
+    if not is_ok:
         return 0
 
-    try:
-        properties_file = open(_path.PROPERTIES_FILE, 'r')
-    except IOError:
-        print("ERROR!: Impossible to open properties_files.")
+    is_ok, properties_file = readFile(_path.PROPERTIES_FILE, "Impossible to open properties_files")
+    if not is_ok:
         return 0
 
-    try:
-        testbench_file = open(output_test_file_name,'w')
-    except IOError:
-        print("ERROR!: Impossible to create testbecnh_file.")
+    is_ok, testbench_file = writeFile(output_test_file_name, "Impossible to create testbench_file")
+    if not is_ok:
         return 0
-
 
     # Get types functions
-    res, types_function_dic = typesfunctionToDic(_path.TYPES_FUNCTION_FILE)
-    if not res:
+    is_ok, types_function_dic = typesfunctionToDic(_path.TYPES_FUNCTION_FILE)
+    if not is_ok:
         return 0
 
+
+    # TODO: Chequear que el arcivo del proyecto compile (no tenga errores de por si)
 
     # Wirte head and imports
     testbench_file.write("{-# LANGUAGE ScopedTypeVariables, TemplateHaskell #-}\n")
     testbench_file.write("module Main where\n")
     testbench_file.write("import Test.QuickCheck\n\n")
 
+
+    # TODO: Reformular carga de funciones para que incluya posibles funciones auxiliares
     # Write functions to test
     testbench_file.write("-- Begin function to testing\n")
     testbench_file.write("-- ============================\n")
@@ -103,11 +100,9 @@ def typesfunctionToDic(types_function_file):
 
     dic = {}
 
-    try:
-        file = open(types_function_file,'r')
-    except IOError:
-        print("ERROR!: Impossible to open types_function_file.")
-        return 0, dic
+    is_ok, file = readFile(types_function_file, "Impossible to open types_function_file")
+    if not is_ok:
+        return 0, None
 
     for line in file:
         fun_type = line.rstrip().replace(" ","")
@@ -116,6 +111,27 @@ def typesfunctionToDic(types_function_file):
     file.close()
 
     return 1, dic
+
+
+def readFile(file_path, message_by_error=""):
+    try:
+        file_descriptor = open(file_path, 'r')
+    except IOError:
+        print("Open Error!: {}.".format(message_by_error))
+        return 0, None
+
+    return 1, file_descriptor
+
+
+def writeFile(file_path, message_by_error=""):
+    try:
+        file_descriptor = open(file_path, 'w')
+    except IOError:
+        print("Write Error!: {}.".format(message_by_error))
+        return 0, None
+
+    return 1, file_descriptor
+
 
 
 if __name__ == '__main__':
