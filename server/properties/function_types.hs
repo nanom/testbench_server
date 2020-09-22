@@ -5,11 +5,11 @@ esPositivo :: Int->Bool
 esVocal :: Char->Bool
 paratodo :: [Bool] -> Bool
 sumatoria :: [Int] -> Int
-productoria :: [Int] -> Int
-factorial :: Int -> Int
-promedio :: [Int] -> Int
-pertenece :: Int -> [Int] -> Bool
--- paratodo' :: [a] -> (a->Bool) -> Bool
+-- productoria :: [Int] -> Int
+-- factorial :: Int -> Int
+-- promedio :: [Int] -> Int
+-- pertenece :: Int -> [Int] -> Bool
+-- paratodo' :: [a] -> (a -> Bool) -> Bool
 -- existe' :: [a] -> (a->Bool) -> Bool
 -- existe'' :: [a] -> (a->Bool) -> Bool
 -- sumatoria' :: [a] -> (a->Int) -> Int

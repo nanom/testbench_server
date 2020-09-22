@@ -21,16 +21,16 @@
                 </div>
             </form>
             <p></p>
-            {% if info.messages != "" %}
-            <div class="alert alert-info text-center" role="alert"><b>{{info.messages}}</b></div>
+            {% if data.messages != "" %}
+            <div class="alert alert-info text-center" role="alert"><b>{{data.messages}}</b></div>
             {% endif %}
         </div>
     </div>
     <p></p>
     <div class="card">
         <div class="card-header">
-            {% if info.avg != "" %}
-                <h4>Corrección: <span class="badge badge-warning">{{ info.avg }}<span></h4>
+            {% if data.test_results[1] != "" %}
+                <h4>Corrección: <span class="badge badge-warning">{{ data.test_results[1] }}<span></h4>
             {% else %}
                 <h5>Corrección:</h5>
             {% endif %}
@@ -38,8 +38,8 @@
         <div class="card-body p-5 text-center">
             <div class="row">
                 <div class="col-sm-12">
-                    {% if info.results != [] %}
-                        {% for line in info.results %}
+                    {% if data.test_results[0] != [] %}
+                        {% for line in data.test_results[0] %}
                             <b>{{line}}</b><br>
                         {% endfor %}
                     {% endif %}
