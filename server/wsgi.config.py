@@ -1,6 +1,3 @@
-# Reference: https://github.com/benoitc/gunicorn/blob/master/examples/example_config.py
-# coding=utf-8
-
 # --- Declare imports ---
 import os
 import multiprocessing

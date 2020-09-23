@@ -163,4 +163,5 @@ def cleanAll(filename):
 
 
 if __name__ == '__main__':
+    # Only to test, not production deployment.
     app.run(port=int(SERVER_PORT), host=SERVER_HOST, debug=True, threaded=True)
