@@ -14,6 +14,4 @@ COPY . .
 
 WORKDIR /www/server
 
-# ENTRYPOINT ["python3", "./server.py"]
-# CMD ["run.sh"]
 ENTRYPOINT ["/bin/bash", "./run.sh"]
